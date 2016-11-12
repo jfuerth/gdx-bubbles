@@ -2,9 +2,11 @@ package ca.fuerth.gdx.phase;
 
 import ca.fuerth.gdx.GameData;
 import ca.fuerth.gdx.bubbles.Bubble;
+import ca.fuerth.gdx.mesh.MeshBatch;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Graphics;
 import com.badlogic.gdx.Input;
+import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 
@@ -40,7 +42,7 @@ public class BubblesRisingPhase implements Phase {
     }
 
     @Override
-    public void draw(SpriteBatch batch) {
+    public void draw(MeshBatch meshBatch, SpriteBatch spriteBatch) {
         ArrayList<Bubble> redBubbles = gameData.getRedBubbles();
         ArrayList<Bubble> blueBubbles = gameData.getBlueBubbles();
 
@@ -52,14 +54,14 @@ public class BubblesRisingPhase implements Phase {
             }
         }
 
-        process(batch, blueBubbles);
-        process(batch, redBubbles);
+        process(meshBatch, blueBubbles);
+        process(meshBatch, redBubbles);
 
-        font.draw(batch, "" + blueBubbles.size() + " blueBubbles", 15, 15);
-        font.draw(batch, "" + redBubbles.size() + " redBubbles", 15, 30);
+        font.draw(spriteBatch, "" + blueBubbles.size() + " blueBubbles", 15, 15);
+        font.draw(spriteBatch, "" + redBubbles.size() + " redBubbles", 15, 30);
     }
 
-    private void process(SpriteBatch batch, ArrayList<Bubble> bubbles) {
+    private void process(MeshBatch batch, ArrayList<Bubble> bubbles) {
         for (int i = bubbles.size() - 1; i >= 0; i--) {
             Bubble b = bubbles.get(i);
             if (b.getY() > height) {
@@ -72,29 +74,25 @@ public class BubblesRisingPhase implements Phase {
     }
 
     private Bubble makeBlueBubble() {
-        Bubble b = new Bubble(random(14) + 1f, random(width), 0f);
         float desaturation = random(0.2f);
         float blueness = random(0.5f) + 0.5f;
-        b.setColor(
+        Color color = new Color(
                 desaturation,
                 desaturation,
                 min(1f, blueness + desaturation),
-                0.8f
-        );
-        return b;
+                0.8f);
+        return new Bubble(random(14) + 1f, random(width), 0f, color);
     }
 
     private Bubble makeRedBubble() {
-        Bubble b = new Bubble(random(14) + 1f, random(width), 0f);
         float desaturation = random(0.2f);
         float redness = random(0.5f) + 0.5f;
-        b.setColor(
+        Color color = new Color(
                 min(1f, redness + desaturation),
                 desaturation,
                 desaturation,
-                0.8f
-        );
-        return b;
+                0.8f);
+        return new Bubble(random(14) + 1f, random(width), 0f, color);
     }
 
     @Override

@@ -1,27 +1,29 @@
 package ca.fuerth.gdx.bubbles;
 
-import com.badlogic.gdx.graphics.Texture;
-import com.badlogic.gdx.graphics.g2d.Sprite;
+import ca.fuerth.gdx.mesh.MeshBatch;
+import com.badlogic.gdx.graphics.Color;
 
-import static com.badlogic.gdx.math.MathUtils.ceil;
 import static com.badlogic.gdx.math.MathUtils.sin;
 import static java.lang.Math.log;
 
-public class Bubble extends Sprite {
+public class Bubble {
 
     private float speed;
     private float xPhase;
     private float phaseRate;
     private float diameter;
+    private float x;
+    private float y;
+    private Color color;
 
-    public Bubble(float diameter, float x, float y) {
-        super(BubbleTexture.ofSize(diameter));
-        setCenter(diameter / 2, diameter / 2);
-        speed = 1.5f * (float) log(1.0 + diameter);
-        phaseRate = 3f/diameter;
+    public Bubble(float diameter, float x, float y, Color color) {
         this.diameter = diameter;
-        setX(x);
-        setY(y);
+        this.x = x;
+        this.y = y;
+        this.color = color;
+
+        speed = 1.5f * (float) log(1.0 + diameter);
+        phaseRate = 3f / diameter;
     }
 
     public void update() {
@@ -29,19 +31,62 @@ public class Bubble extends Sprite {
         translate(sin(xPhase) / 3f, speed);
     }
 
+    public void draw(MeshBatch batch) {
+        float r = diameter / 2f;
+        batch.add(
+                x - r, y - r,
+                x - r, y + r,
+                x + r, y,
+                color);
+    }
+
     public void dispose() {
-        getTexture().dispose();
     }
 
     public void growAreaBy(Bubble removed) {
         this.diameter += removed.diameter; // TODO grow by area
-        getTexture().dispose();
-        Texture newTexture = BubbleTexture.ofSize(this.diameter);
-        System.out.println("New texture size: " + newTexture.getWidth() + " " + newTexture.getHeight());
-        setTexture(newTexture);
-        setRegion(0, 0, newTexture.getWidth(), newTexture.getHeight());
-        setColor(1, 1, 1, 1);
-        setSize(newTexture.getWidth(), newTexture.getHeight());
-        setOriginCenter();
+    }
+
+
+    public void translate(float x, float y) {
+        this.x += x;
+        this.y += y;
+    }
+
+    public void setPosition(float x, float y) {
+        this.x = x;
+        this.y = y;
+    }
+
+    public void setX(float x) {
+        this.x = x;
+    }
+
+    public void setY(float y) {
+        this.y = y;
+    }
+
+    public float getX() {
+        return x;
+    }
+
+    public float getY() {
+        return y;
+    }
+
+    public Color getColor() {
+        return color;
+    }
+
+    public void setColor(Color color) {
+        this.color = color;
+    }
+
+    public void setColor(float r, float g, float b, float a) {
+        setColor(new Color(r, g, b, a));
+    }
+
+    public float getDiameter() {
+        return diameter;
     }
 }

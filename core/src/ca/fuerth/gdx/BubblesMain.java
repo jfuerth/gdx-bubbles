@@ -1,5 +1,6 @@
 package ca.fuerth.gdx;
 
+import ca.fuerth.gdx.mesh.MeshBatch;
 import ca.fuerth.gdx.phase.BubbleCountingPhase;
 import ca.fuerth.gdx.phase.BubblesRisingPhase;
 import ca.fuerth.gdx.phase.Phase;
@@ -12,7 +13,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class BubblesMain extends ApplicationAdapter {
-    private SpriteBatch batch;
+    private SpriteBatch spriteBatch;
+    private MeshBatch meshBatch;
 
     private GameData gameData;
     private List<Phase> phases;
@@ -27,7 +29,8 @@ public class BubblesMain extends ApplicationAdapter {
     public void create() {
         gameData = new GameData();
         resetGamePhases();
-        batch = new SpriteBatch();
+        spriteBatch = new SpriteBatch();
+        meshBatch = new MeshBatch(1024);
     }
 
     private void resetGamePhases() {
@@ -44,12 +47,16 @@ public class BubblesMain extends ApplicationAdapter {
 
         Phase phase = phases.get(currentPhase);
 
-        batch.begin();
+        meshBatch.begin(Gdx.graphics);
+        spriteBatch.begin();
         boolean currentPhaseFinished = !phase.processInput(Gdx.input);
-        phase.draw(batch);
-        batch.end();
+        phase.draw(meshBatch, spriteBatch);
+        spriteBatch.end();
+        meshBatch.end();
+
 
         if (currentPhaseFinished) {
+            phase.dispose();
             currentPhase++;
             if (currentPhase == phases.size()) {
                 resetGamePhases();
@@ -59,7 +66,8 @@ public class BubblesMain extends ApplicationAdapter {
 
     @Override
     public void dispose() {
-        batch.dispose();
+        spriteBatch.dispose();
+        meshBatch.dispose();
         for (Phase phase : phases) {
             phase.dispose();
         }

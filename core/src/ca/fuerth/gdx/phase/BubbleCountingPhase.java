@@ -2,8 +2,10 @@ package ca.fuerth.gdx.phase;
 
 import ca.fuerth.gdx.GameData;
 import ca.fuerth.gdx.bubbles.Bubble;
+import ca.fuerth.gdx.mesh.MeshBatch;
 import com.badlogic.gdx.Graphics;
 import com.badlogic.gdx.Input;
+import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Vector2;
 
@@ -12,8 +14,8 @@ import java.util.ArrayList;
 public class BubbleCountingPhase implements Phase {
 
     private GameData gameData;
-    int canvasWidth;
-    int canvasHeight;
+    private int canvasWidth;
+    private int canvasHeight;
 
     private Bubble blueSumBubble;
     private Bubble redSumBubble;
@@ -26,10 +28,11 @@ public class BubbleCountingPhase implements Phase {
         canvasWidth = graphics.getWidth();
         canvasHeight = graphics.getHeight();
 
-        blueSumBubble = new Bubble(0f, .25f * canvasWidth, .5f * canvasHeight);
+        Color emptyBubbleColor = new Color(0, 0, 0, 0);
+        blueSumBubble = new Bubble(0f, .25f * canvasWidth, .5f * canvasHeight, emptyBubbleColor);
         blueSumBubble.setColor(0f, 0f, 0f, 0f);
 
-        redSumBubble = new Bubble(0f, .75f * canvasWidth, .5f * canvasHeight);
+        redSumBubble = new Bubble(0f, .75f * canvasWidth, .5f * canvasHeight, emptyBubbleColor);
         redSumBubble.setColor(0f, 0f, 0f, 0f);
     }
 
@@ -39,29 +42,20 @@ public class BubbleCountingPhase implements Phase {
     }
 
     @Override
-    public void draw(SpriteBatch batch) {
-        process(batch, gameData.getBlueBubbles(), blueSumBubble);
-        process(batch, gameData.getRedBubbles(), redSumBubble);
-        blueSumBubble.draw(batch);
-        redSumBubble.draw(batch);
+    public void draw(MeshBatch meshBatch, SpriteBatch spriteBatch) {
+        process(meshBatch, gameData.getBlueBubbles(), blueSumBubble);
+        process(meshBatch, gameData.getRedBubbles(), redSumBubble);
+        blueSumBubble.draw(meshBatch);
+        redSumBubble.draw(meshBatch);
     }
 
-    private void process(SpriteBatch batch, ArrayList<Bubble> bubbles, Bubble target) {
+    private void process(MeshBatch batch, ArrayList<Bubble> bubbles, Bubble target) {
         for (int i = bubbles.size() - 1; i >= 0; i--) {
             Bubble b = bubbles.get(i);
             if (moveTowardSum(target, b)) {
                 Bubble removed = bubbles.remove(i);
                 target.growAreaBy(removed);
                 target.setColor(target.getColor().lerp(removed.getColor(), 0.8f));
-                if (removed.getX() > canvasWidth / 2) {
-                    target.setPosition(
-                            .75f * canvasWidth - target.getWidth() / 2,
-                            .5f * canvasHeight - target.getHeight() / 2);
-                } else {
-                    target.setPosition(
-                            .25f * canvasWidth - target.getWidth() / 2,
-                            .5f * canvasHeight - target.getHeight() / 2);
-                }
                 removed.dispose();
             } else {
                 b.draw(batch);
@@ -101,6 +95,7 @@ public class BubbleCountingPhase implements Phase {
 
     @Override
     public void dispose() {
-
+        redSumBubble.dispose();
+        blueSumBubble.dispose();
     }
 }
