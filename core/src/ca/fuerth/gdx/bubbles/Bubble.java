@@ -3,6 +3,8 @@ package ca.fuerth.gdx.bubbles;
 import ca.fuerth.gdx.mesh.MeshBatch;
 import com.badlogic.gdx.graphics.Color;
 
+import static com.badlogic.gdx.math.MathUtils.PI;
+import static com.badlogic.gdx.math.MathUtils.cos;
 import static com.badlogic.gdx.math.MathUtils.sin;
 import static java.lang.Math.log;
 
@@ -33,11 +35,16 @@ public class Bubble {
 
     public void draw(MeshBatch batch) {
         float r = diameter / 2f;
-        batch.add(
-                x - r, y - r,
-                x - r, y + r,
-                x + r, y,
-                color);
+
+        final float step = 0.2f;
+        float twopi = PI * 2f;
+        for (float a = 0; a < twopi; a += step) {
+            batch.add(
+                    x, y,
+                    x + diameter * cos(a), y + diameter * sin(a),
+                    x + diameter * cos(a + step), y + diameter * sin(a + step),
+                    color);
+        }
     }
 
     public void dispose() {

@@ -30,7 +30,7 @@ public class BubblesMain extends ApplicationAdapter {
         gameData = new GameData();
         resetGamePhases();
         spriteBatch = new SpriteBatch();
-        meshBatch = new MeshBatch(1024);
+        meshBatch = new MeshBatch(10240);
     }
 
     private void resetGamePhases() {
