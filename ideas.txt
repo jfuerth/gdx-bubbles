@@ -1,6 +1,7 @@
 Game ideas:
 
 - press when total amount of red > total blue
-  - add more colours to make it harder
 - press when specific number of red bubbles are on screen (regardless of size)
 - press when equal amount of red & blue are on screen
+
+- add more colours to make any of the above harder

@@ -23,9 +23,6 @@ public class BubbleCountingPhase implements Phase {
     private float gatherSpeed = 0.5f;
     private float gatherAccel = 0.2f;
 
-    private float redBubbleTempInflation = 0f;
-    private float blueBubbleTempInflation = 0f;
-
     public BubbleCountingPhase(Graphics graphics, GameData gameData) {
         this.gameData = gameData;
         canvasWidth = graphics.getWidth();
@@ -98,7 +95,7 @@ public class BubbleCountingPhase implements Phase {
         float ty = target.getY();
 
         Vector2 cTov = new Vector2(tx - cx, ty - cy);
-        if (cTov.len() <= gatherSpeed) {
+        if (cTov.len() <= gatherSpeed + target.getDiameter() / 2f) {
             return true;
         }
         cTov.nor().scl(gatherSpeed);
