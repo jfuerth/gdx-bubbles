@@ -7,6 +7,8 @@ import static com.badlogic.gdx.math.MathUtils.PI;
 import static com.badlogic.gdx.math.MathUtils.cos;
 import static com.badlogic.gdx.math.MathUtils.sin;
 import static java.lang.Math.log;
+import static java.lang.Math.pow;
+import static java.lang.Math.sqrt;
 
 public class Bubble {
 
@@ -34,9 +36,7 @@ public class Bubble {
     }
 
     public void draw(MeshBatch batch) {
-        float r = diameter / 2f;
-
-        final float step = 0.2f;
+        final float step = PI / 8f;
         float twopi = PI * 2f;
         for (float a = 0; a < twopi; a += step) {
             batch.add(
@@ -51,7 +51,17 @@ public class Bubble {
     }
 
     public void growAreaBy(Bubble removed) {
-        this.diameter += removed.diameter; // TODO grow by area
+        float mr = this.diameter / 2f;
+        float tr = removed.diameter / 2f;
+        // ma = pi * mr * mr
+        // ta = pi * tr * tr
+        // na = ma + ta
+        //    = (pi * mr * mr) + (pi * tr * tr)
+        //    = pi (mr^2 + tr^2)
+        // pi * nr^2 = pi (mr^2 + tr^2)
+        // nr^2 = mr^2 + tr^2
+        // nr = sqrt(mr^2 + tr^2)
+        this.diameter = (float) (2f * sqrt(mr * mr + tr * tr));
     }
 
 
