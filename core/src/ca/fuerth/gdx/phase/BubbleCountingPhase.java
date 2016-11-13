@@ -23,6 +23,9 @@ public class BubbleCountingPhase implements Phase {
     private float gatherSpeed = 0.5f;
     private float gatherAccel = 0.2f;
 
+    private float redBubbleTempInflation = 0f;
+    private float blueBubbleTempInflation = 0f;
+
     public BubbleCountingPhase(Graphics graphics, GameData gameData) {
         this.gameData = gameData;
         canvasWidth = graphics.getWidth();
@@ -31,22 +34,31 @@ public class BubbleCountingPhase implements Phase {
         Color emptyBubbleColor = new Color(0, 0, 0, 0);
         blueSumBubble = new Bubble(0f, .25f * canvasWidth, .5f * canvasHeight, emptyBubbleColor);
         blueSumBubble.setColor(0f, 0f, 0f, 0f);
+        blueSumBubble.setPhaseRate(0f);
 
         redSumBubble = new Bubble(0f, .75f * canvasWidth, .5f * canvasHeight, emptyBubbleColor);
         redSumBubble.setColor(0f, 0f, 0f, 0f);
+        redSumBubble.setPhaseRate(0f);
     }
 
     @Override
     public boolean processInput(Input input) {
-        return !gameData.getBlueBubbles().isEmpty() || !gameData.getRedBubbles().isEmpty();
+        return !gameData.getBlueBubbles().isEmpty()
+                || !gameData.getRedBubbles().isEmpty()
+                || redSumBubble.getTempInflation() > 0f
+                || blueSumBubble.getTempInflation() > 0f;
     }
 
     @Override
     public void draw(MeshBatch meshBatch, SpriteBatch spriteBatch) {
         process(meshBatch, gameData.getBlueBubbles(), blueSumBubble);
         process(meshBatch, gameData.getRedBubbles(), redSumBubble);
-        blueSumBubble.draw(meshBatch);
+
+        redSumBubble.update();
         redSumBubble.draw(meshBatch);
+
+        blueSumBubble.update();
+        blueSumBubble.draw(meshBatch);
     }
 
     private void process(MeshBatch batch, ArrayList<Bubble> bubbles, Bubble target) {
@@ -55,6 +67,7 @@ public class BubbleCountingPhase implements Phase {
             if (moveTowardSum(target, b)) {
                 Bubble removed = bubbles.remove(i);
                 target.growAreaBy(removed);
+                target.addTempInflation(5f);
                 target.setColor(target.getColor().lerp(removed.getColor(), 0.8f));
                 removed.dispose();
             } else {

@@ -6,9 +6,7 @@ import com.badlogic.gdx.graphics.Color;
 import static com.badlogic.gdx.math.MathUtils.PI;
 import static com.badlogic.gdx.math.MathUtils.cos;
 import static com.badlogic.gdx.math.MathUtils.sin;
-import static java.lang.Math.log;
-import static java.lang.Math.pow;
-import static java.lang.Math.sqrt;
+import static java.lang.Math.*;
 
 public class Bubble {
 
@@ -19,6 +17,8 @@ public class Bubble {
     private float x;
     private float y;
     private Color color;
+    private float tempInflation;
+    private float deflatePercentage = 0.95f;
 
     public Bubble(float diameter, float x, float y, Color color) {
         this.diameter = diameter;
@@ -33,16 +33,19 @@ public class Bubble {
     public void update() {
         xPhase += phaseRate;
         translate(sin(xPhase) / 3f, speed);
+
+        tempInflation = max(0f, (tempInflation - 0.1f) * deflatePercentage);
     }
 
     public void draw(MeshBatch batch) {
         final float step = PI / 8f;
         float twopi = PI * 2f;
         for (float a = 0; a < twopi; a += step) {
+            float d = diameter + tempInflation;
             batch.add(
                     x, y,
-                    x + diameter * cos(a), y + diameter * sin(a),
-                    x + diameter * cos(a + step), y + diameter * sin(a + step),
+                    x + d * cos(a), y + d * sin(a),
+                    x + d * cos(a + step), y + d * sin(a + step),
                     color);
         }
     }
@@ -105,5 +108,37 @@ public class Bubble {
 
     public float getDiameter() {
         return diameter;
+    }
+
+    public void setDiameter(float diameter) {
+        this.diameter = diameter;
+    }
+
+    public float getSpeed() {
+        return speed;
+    }
+
+    public void setSpeed(float speed) {
+        this.speed = speed;
+    }
+
+    public void addTempInflation(float v) {
+        this.tempInflation += v;
+    }
+
+    public float getPhaseRate() {
+        return phaseRate;
+    }
+
+    public void setPhaseRate(float phaseRate) {
+        this.phaseRate = phaseRate;
+    }
+
+    public float getTempInflation() {
+        return tempInflation;
+    }
+
+    public void setTempInflation(float tempInflation) {
+        this.tempInflation = tempInflation;
     }
 }
