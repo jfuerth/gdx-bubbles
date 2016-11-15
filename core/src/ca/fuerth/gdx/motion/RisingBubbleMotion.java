@@ -8,9 +8,9 @@ public class RisingBubbleMotion implements MotionStrategy {
     private float xPhase;
     private float phaseRate;
 
-    public RisingBubbleMotion(float bubbleDiameter) {
-        speed = 1.5f * (float) log(1.0 + bubbleDiameter);
-        phaseRate = 3f / bubbleDiameter;
+    public RisingBubbleMotion(float bubbleRadius) {
+        speed = 1.5f * (float) log(1.0 + bubbleRadius);
+        phaseRate = 3f / bubbleRadius;
     }
 
     @Override

@@ -15,16 +15,16 @@ public class Bubble implements Translatable {
     private static final float TWOPI = MathUtils.PI * 2f;
 
     private MotionStrategy motionStrategy;
-    private float diameter;
+    private float radius;
     private float x;
     private float y;
     private Color color;
     private float tempInflation;
     private float deflatePercentage = 0.95f;
 
-    public Bubble(MotionStrategy motionStrategy, float diameter, float x, float y, Color color) {
+    public Bubble(MotionStrategy motionStrategy, float radius, float x, float y, Color color) {
         this.motionStrategy = motionStrategy;
-        this.diameter = diameter;
+        this.radius = radius;
         this.x = x;
         this.y = y;
         this.color = color;
@@ -36,16 +36,23 @@ public class Bubble implements Translatable {
     }
 
     public void draw(MeshBatch batch) {
-        int steps = max(12, floor(diameter / 1.5f));
+
+        // use a minimum 12 segments; more for bigger circles
+        int steps = max(12, floor(radius / 1.5f));
+
         final float step = TWOPI / steps;
         for (int s = 0; s < steps; s++) {
             float a = s * step;
+
+            // clamp very last point to equal first (prevents missing sliver from floating point error)
             float nextA = (s == steps - 1) ? 0f : (s + 1) * step;
-            float d = diameter + tempInflation;
+
+            float r = radius + tempInflation;
+
             batch.add(
                     x, y,
-                    x + d * cos(a), y + d * sin(a),
-                    x + d * cos(nextA), y + d * sin(nextA),
+                    x + r * cos(a), y + r * sin(a),
+                    x + r * cos(nextA), y + r * sin(nextA),
                     color);
         }
     }
@@ -54,8 +61,8 @@ public class Bubble implements Translatable {
     }
 
     public void growAreaBy(Bubble removed) {
-        float mr = this.diameter / 2f;
-        float tr = removed.diameter / 2f;
+        float mr = this.radius;
+        float tr = removed.radius;
         // ma = pi * mr * mr
         // ta = pi * tr * tr
         // na = ma + ta
@@ -64,7 +71,7 @@ public class Bubble implements Translatable {
         // pi * nr^2 = pi (mr^2 + tr^2)
         // nr^2 = mr^2 + tr^2
         // nr = sqrt(mr^2 + tr^2)
-        this.diameter = (float) (2f * sqrt(mr * mr + tr * tr));
+        this.radius = (float) sqrt(mr * mr + tr * tr);
     }
 
 
@@ -111,12 +118,12 @@ public class Bubble implements Translatable {
         setColor(new Color(r, g, b, a));
     }
 
-    public float getDiameter() {
-        return diameter;
+    public float getRadius() {
+        return radius;
     }
 
-    public void setDiameter(float diameter) {
-        this.diameter = diameter;
+    public void setRadius(float radius) {
+        this.radius = radius;
     }
 
     public void addTempInflation(float v) {

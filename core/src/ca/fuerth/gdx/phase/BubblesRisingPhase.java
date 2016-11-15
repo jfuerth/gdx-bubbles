@@ -82,8 +82,8 @@ public class BubblesRisingPhase implements Phase {
                 desaturation,
                 min(1f, blueness + desaturation),
                 0.8f);
-        float diameter = random(14) + 1f;
-        return new Bubble(new RisingBubbleMotion(diameter), diameter, random(width), 0f, color);
+        float radius = random(14) + 1f;
+        return new Bubble(new RisingBubbleMotion(radius), radius, random(width), 0f, color);
     }
 
     private Bubble makeRedBubble() {
@@ -94,8 +94,8 @@ public class BubblesRisingPhase implements Phase {
                 desaturation,
                 desaturation,
                 0.8f);
-        float diameter = random(14) + 1f;
-        return new Bubble(new RisingBubbleMotion(diameter), diameter, random(width), 0f, color);
+        float radius = random(14) + 1f;
+        return new Bubble(new RisingBubbleMotion(radius), radius, random(width), 0f, color);
     }
 
     @Override

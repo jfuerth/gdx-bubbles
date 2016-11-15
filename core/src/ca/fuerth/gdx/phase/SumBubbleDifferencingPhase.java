@@ -3,13 +3,11 @@ package ca.fuerth.gdx.phase;
 import ca.fuerth.gdx.GameData;
 import ca.fuerth.gdx.bubbles.Bubble;
 import ca.fuerth.gdx.mesh.MeshBatch;
-import ca.fuerth.gdx.motion.MotionStrategy;
 import ca.fuerth.gdx.motion.ProjectileMotion;
 import com.badlogic.gdx.Graphics;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
-import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector2;
 
 import java.util.ArrayList;
@@ -35,8 +33,8 @@ public class SumBubbleDifferencingPhase implements Phase {
 
     @Override
     public boolean processInput(Input input) {
-        return gameData.getRedSumBubble().getDiameter() > 0f
-                && gameData.getBlueSumBubble().getDiameter() > 0f;
+        return gameData.getRedSumBubble().getRadius() > 0f
+                && gameData.getBlueSumBubble().getRadius() > 0f;
     }
 
     @Override
@@ -47,7 +45,7 @@ public class SumBubbleDifferencingPhase implements Phase {
         redVelocity.set(redSum.getX(), redSum.getY());
         blueVelocity.set(blueSum.getX(), blueSum.getY());
 
-        adjustVectorToward(redVelocity, blueSum.getX(), blueSum.getY(), redSum.getDiameter());
+        adjustVectorToward(redVelocity, blueSum.getX(), blueSum.getY(), redSum.getRadius());
         adjustVectorToward(blueVelocity, redSum.getX(), redSum.getY(), convergenceSpeedLimit);
 
         float touchX = redSum.getX() + redVelocity.x;
@@ -62,14 +60,14 @@ public class SumBubbleDifferencingPhase implements Phase {
                 redSum.getX() - blueSum.getX(),
                 redSum.getY() - blueSum.getY());
 
-        float touchingDistance = (redSum.getDiameter() + blueSum.getDiameter());
+        float touchingDistance = (redSum.getRadius() + blueSum.getRadius());
         float overlap = touchingDistance - distance;
 
 
         if (overlap > 0f) {
             // TODO this doesn't preserve relative bubble areas
-            redSum.setDiameter(redSum.getDiameter() - overlap / 4f);
-            blueSum.setDiameter(blueSum.getDiameter() - overlap / 4f);
+            redSum.setRadius(redSum.getRadius() - overlap / 2f);
+            blueSum.setRadius(blueSum.getRadius() - overlap / 2f);
 
             gameData.getRedBubbles().add(
                     new Bubble(

@@ -5,7 +5,6 @@ import ca.fuerth.gdx.bubbles.Bubble;
 import ca.fuerth.gdx.mesh.MeshBatch;
 import com.badlogic.gdx.Graphics;
 import com.badlogic.gdx.Input;
-import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Vector2;
 
@@ -83,7 +82,7 @@ public class BubbleCountingPhase implements Phase {
         float ty = target.getY();
 
         Vector2 cTov = new Vector2(tx - cx, ty - cy);
-        if (cTov.len() <= gatherSpeed + target.getDiameter() / 2f) {
+        if (cTov.len() <= gatherSpeed + target.getRadius()) {
             return true;
         }
         cTov.nor().scl(gatherSpeed);
