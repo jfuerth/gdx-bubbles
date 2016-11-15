@@ -1,6 +1,7 @@
 package ca.fuerth.gdx;
 
 import ca.fuerth.gdx.bubbles.Bubble;
+import ca.fuerth.gdx.motion.MotionStrategy;
 import com.badlogic.gdx.Graphics;
 import com.badlogic.gdx.graphics.Color;
 
@@ -17,14 +18,11 @@ public class GameData {
 
         float canvasWidth = graphics.getWidth();
         float canvasHeight = graphics.getHeight();
-        blueSumBubble = new Bubble(0f, .25f * canvasWidth, .5f * canvasHeight, emptyBubbleColor);
+        blueSumBubble = new Bubble(MotionStrategy.NO_MOTION, 0f, .25f * canvasWidth, .5f * canvasHeight, emptyBubbleColor);
         blueSumBubble.setColor(0f, 0f, 0f, 0f);
-        blueSumBubble.setPhaseRate(0f);
 
-        redSumBubble = new Bubble(0f, .75f * canvasWidth, .5f * canvasHeight, emptyBubbleColor);
+        redSumBubble = new Bubble(MotionStrategy.NO_MOTION, 0f, .75f * canvasWidth, .5f * canvasHeight, emptyBubbleColor);
         redSumBubble.setColor(0f, 0f, 0f, 0f);
-        redSumBubble.setPhaseRate(0f);
-
     }
 
     public ArrayList<Bubble> getBlueBubbles() {

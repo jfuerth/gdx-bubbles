@@ -1,18 +1,19 @@
 package ca.fuerth.gdx.bubbles;
 
 import ca.fuerth.gdx.mesh.MeshBatch;
+import ca.fuerth.gdx.motion.MotionStrategy;
+import ca.fuerth.gdx.motion.Translatable;
 import com.badlogic.gdx.graphics.Color;
+import com.badlogic.gdx.math.Vector2;
 
 import static com.badlogic.gdx.math.MathUtils.PI;
 import static com.badlogic.gdx.math.MathUtils.cos;
 import static com.badlogic.gdx.math.MathUtils.sin;
 import static java.lang.Math.*;
 
-public class Bubble {
+public class Bubble implements Translatable {
 
-    private float speed;
-    private float xPhase;
-    private float phaseRate;
+    private MotionStrategy motionStrategy;
     private float diameter;
     private float x;
     private float y;
@@ -20,20 +21,16 @@ public class Bubble {
     private float tempInflation;
     private float deflatePercentage = 0.95f;
 
-    public Bubble(float diameter, float x, float y, Color color) {
+    public Bubble(MotionStrategy motionStrategy, float diameter, float x, float y, Color color) {
+        this.motionStrategy = motionStrategy;
         this.diameter = diameter;
         this.x = x;
         this.y = y;
         this.color = color;
-
-        speed = 1.5f * (float) log(1.0 + diameter);
-        phaseRate = 3f / diameter;
     }
 
     public void update() {
-        xPhase += phaseRate;
-        translate(sin(xPhase) / 3f, speed);
-
+        motionStrategy.move(this);
         tempInflation = max(0f, (tempInflation - 0.1f) * deflatePercentage);
     }
 
@@ -71,6 +68,11 @@ public class Bubble {
     public void translate(float x, float y) {
         this.x += x;
         this.y += y;
+    }
+
+    public void translate(Vector2 v) {
+        this.x += v.x;
+        this.y += v.y;
     }
 
     public void setPosition(float x, float y) {
@@ -114,24 +116,8 @@ public class Bubble {
         this.diameter = diameter;
     }
 
-    public float getSpeed() {
-        return speed;
-    }
-
-    public void setSpeed(float speed) {
-        this.speed = speed;
-    }
-
     public void addTempInflation(float v) {
         this.tempInflation += v;
-    }
-
-    public float getPhaseRate() {
-        return phaseRate;
-    }
-
-    public void setPhaseRate(float phaseRate) {
-        this.phaseRate = phaseRate;
     }
 
     public float getTempInflation() {

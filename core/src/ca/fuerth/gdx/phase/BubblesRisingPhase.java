@@ -3,6 +3,7 @@ package ca.fuerth.gdx.phase;
 import ca.fuerth.gdx.GameData;
 import ca.fuerth.gdx.bubbles.Bubble;
 import ca.fuerth.gdx.mesh.MeshBatch;
+import ca.fuerth.gdx.motion.RisingBubbleMotion;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Graphics;
 import com.badlogic.gdx.Input;
@@ -81,7 +82,8 @@ public class BubblesRisingPhase implements Phase {
                 desaturation,
                 min(1f, blueness + desaturation),
                 0.8f);
-        return new Bubble(random(14) + 1f, random(width), 0f, color);
+        float diameter = random(14) + 1f;
+        return new Bubble(new RisingBubbleMotion(diameter), diameter, random(width), 0f, color);
     }
 
     private Bubble makeRedBubble() {
@@ -92,7 +94,8 @@ public class BubblesRisingPhase implements Phase {
                 desaturation,
                 desaturation,
                 0.8f);
-        return new Bubble(random(14) + 1f, random(width), 0f, color);
+        float diameter = random(14) + 1f;
+        return new Bubble(new RisingBubbleMotion(diameter), diameter, random(width), 0f, color);
     }
 
     @Override
