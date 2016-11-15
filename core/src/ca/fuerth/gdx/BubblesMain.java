@@ -4,6 +4,7 @@ import ca.fuerth.gdx.mesh.MeshBatch;
 import ca.fuerth.gdx.phase.BubbleCountingPhase;
 import ca.fuerth.gdx.phase.BubblesRisingPhase;
 import ca.fuerth.gdx.phase.Phase;
+import ca.fuerth.gdx.phase.SumBubbleDifferencingPhase;
 import com.badlogic.gdx.ApplicationAdapter;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.GL20;
@@ -37,6 +38,7 @@ public class BubblesMain extends ApplicationAdapter {
         phases = new ArrayList<Phase>();
         phases.add(new BubblesRisingPhase(Gdx.graphics, gameData, 0.25f, 0.5f));
         phases.add(new BubbleCountingPhase(Gdx.graphics, gameData));
+        phases.add(new SumBubbleDifferencingPhase(Gdx.graphics, gameData));
         currentPhase = 0;
     }
 

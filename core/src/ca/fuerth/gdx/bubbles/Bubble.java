@@ -4,14 +4,15 @@ import ca.fuerth.gdx.mesh.MeshBatch;
 import ca.fuerth.gdx.motion.MotionStrategy;
 import ca.fuerth.gdx.motion.Translatable;
 import com.badlogic.gdx.graphics.Color;
+import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector2;
 
-import static com.badlogic.gdx.math.MathUtils.PI;
-import static com.badlogic.gdx.math.MathUtils.cos;
-import static com.badlogic.gdx.math.MathUtils.sin;
+import static com.badlogic.gdx.math.MathUtils.*;
 import static java.lang.Math.*;
 
 public class Bubble implements Translatable {
+
+    private static final float TWOPI = MathUtils.PI * 2f;
 
     private MotionStrategy motionStrategy;
     private float diameter;
@@ -35,14 +36,16 @@ public class Bubble implements Translatable {
     }
 
     public void draw(MeshBatch batch) {
-        final float step = PI / 8f;
-        float twopi = PI * 2f;
-        for (float a = 0; a < twopi; a += step) {
+        int steps = max(12, floor(diameter / 1.5f));
+        final float step = TWOPI / steps;
+        for (int s = 0; s < steps; s++) {
+            float a = s * step;
+            float nextA = (s == steps - 1) ? 0f : (s + 1) * step;
             float d = diameter + tempInflation;
             batch.add(
                     x, y,
                     x + d * cos(a), y + d * sin(a),
-                    x + d * cos(a + step), y + d * sin(a + step),
+                    x + d * cos(nextA), y + d * sin(nextA),
                     color);
         }
     }
