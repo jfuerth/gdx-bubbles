@@ -27,13 +27,13 @@ public class BubblesMain extends ApplicationAdapter {
 
     @Override
     public void create() {
-        gameData = new GameData();
-        resetGamePhases();
+        resetGame();
         spriteBatch = new SpriteBatch();
         meshBatch = new MeshBatch(10240);
     }
 
-    private void resetGamePhases() {
+    private void resetGame() {
+        gameData = new GameData(Gdx.graphics);
         phases = new ArrayList<Phase>();
         phases.add(new BubblesRisingPhase(Gdx.graphics, gameData, 0.25f, 0.5f));
         phases.add(new BubbleCountingPhase(Gdx.graphics, gameData));
@@ -59,7 +59,7 @@ public class BubblesMain extends ApplicationAdapter {
             phase.dispose();
             currentPhase++;
             if (currentPhase == phases.size()) {
-                resetGamePhases();
+                resetGame();
             }
         }
     }
