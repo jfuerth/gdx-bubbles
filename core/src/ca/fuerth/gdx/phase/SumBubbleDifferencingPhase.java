@@ -19,6 +19,7 @@ public class SumBubbleDifferencingPhase implements Phase {
 
     private final GameData gameData;
 
+    private int width;
     private int height;
 
     private Vector2 redVelocity = new Vector2();
@@ -28,13 +29,16 @@ public class SumBubbleDifferencingPhase implements Phase {
 
     public SumBubbleDifferencingPhase(Graphics graphics, GameData gameData) {
         this.gameData = gameData;
+        this.width = graphics.getWidth();
         this.height = graphics.getHeight();
     }
 
     @Override
     public boolean processInput(Input input) {
-        return gameData.getRedSumBubble().getRadius() > 0f
-                && gameData.getBlueSumBubble().getRadius() > 0f;
+        return (gameData.getRedSumBubble().getRadius() > 0f
+                && gameData.getBlueSumBubble().getRadius() > 0f)
+                || gameData.getRedBubbles().size() > 0
+                || gameData.getBlueBubbles().size() > 0;
     }
 
     @Override
@@ -64,7 +68,11 @@ public class SumBubbleDifferencingPhase implements Phase {
         float overlap = touchingDistance - distance;
 
 
-        if (overlap > 0f) {
+        if (redSum.getRadius() <= 0f) {
+            redSum.setColor(0f, 0f, 0f, 0f);
+        } else if (blueSum.getRadius() <= 0f) {
+            blueSum.setColor(0f, 0f, 0f, 0f);
+        } else if (overlap > 0f && blueSum.getRadius() > 0f) {
             // TODO this doesn't preserve relative bubble areas
             redSum.setRadius(redSum.getRadius() - overlap / 2f);
             blueSum.setRadius(blueSum.getRadius() - overlap / 2f);
@@ -102,7 +110,7 @@ public class SumBubbleDifferencingPhase implements Phase {
     private void process(MeshBatch batch, ArrayList<Bubble> bubbles) {
         for (int i = bubbles.size() - 1; i >= 0; i--) {
             Bubble b = bubbles.get(i);
-            if (b.getY() > height || b.getY() < 0) {
+            if (b.getY() > height || b.getY() < 0 || b.getX() < 0 || b.getX() > width) {
                 bubbles.remove(i).dispose();
             } else {
                 b.update();
