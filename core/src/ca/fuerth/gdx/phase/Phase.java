@@ -7,6 +7,11 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 public interface Phase {
 
     /**
+     * Called once before the first call to {@link #processInput(Input)}.
+     */
+    void begin();
+
+    /**
      * Reacts to user input and decides if this game phase should continue.
      *
      * @param input access to user input signals

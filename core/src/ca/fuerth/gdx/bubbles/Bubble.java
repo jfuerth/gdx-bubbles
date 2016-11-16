@@ -137,4 +137,17 @@ public class Bubble implements Translatable {
     public void setTempInflation(float tempInflation) {
         this.tempInflation = tempInflation;
     }
+
+    public void shrinkAreaBy(float squareUnits) {
+        //  A0 = PI * r0 * r0
+        //  A1 = A0 - squareUnits
+        //  A1 = PI * r1 * r1
+        // Solve for r1:
+        //  A0 - squareUnits = PI * r1 * r1
+        //  (A0 - squareUnits) / PI = r1 * r1
+        //  (PI * r0 * r0 - squareUnits) / PI = r1 * r1
+        //  (r0 * r0 - squareUnits/PI) = r1 * r1
+        //  sqrt(r0 * r0 - squareUnits/PI) = r1
+        setRadius((float) sqrt(getRadius() * getRadius() - squareUnits / MathUtils.PI));
+    }
 }

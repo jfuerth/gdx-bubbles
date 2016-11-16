@@ -13,4 +13,8 @@ public class ProjectileMotion implements MotionStrategy {
     public void move(Translatable t) {
         t.translate(velocity.x, velocity.y);
     }
+
+    public static ProjectileMotion toward(Vector2 origin, Vector2 target, float speed) {
+        return new ProjectileMotion(origin.cpy().sub(target).scl(-1f).nor().scl(speed));
+    }
 }

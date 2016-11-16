@@ -3,6 +3,7 @@ package ca.fuerth.gdx.phase;
 import ca.fuerth.gdx.GameData;
 import ca.fuerth.gdx.bubbles.Bubble;
 import ca.fuerth.gdx.mesh.MeshBatch;
+import ca.fuerth.gdx.util.Preconditions;
 import com.badlogic.gdx.Graphics;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
@@ -10,19 +11,16 @@ import com.badlogic.gdx.math.Vector2;
 
 import java.util.ArrayList;
 
-public class BubbleCountingPhase implements Phase {
+public class BubbleCountingPhase extends AbstractGamePhase {
 
     private GameData gameData;
-    private int canvasWidth;
-    private int canvasHeight;
 
     private float gatherSpeed = 0.5f;
     private float gatherAccel = 0.2f;
 
     public BubbleCountingPhase(Graphics graphics, GameData gameData) {
-        this.gameData = gameData;
-        canvasWidth = graphics.getWidth();
-        canvasHeight = graphics.getHeight();
+        super(graphics);
+        this.gameData = Preconditions.nonNull(gameData);
     }
 
     @Override

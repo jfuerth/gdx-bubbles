@@ -4,34 +4,28 @@ import ca.fuerth.gdx.GameData;
 import ca.fuerth.gdx.bubbles.Bubble;
 import ca.fuerth.gdx.mesh.MeshBatch;
 import ca.fuerth.gdx.motion.RisingBubbleMotion;
-import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Graphics;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.graphics.Color;
-import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 
 import java.util.ArrayList;
 
+import static ca.fuerth.gdx.util.Preconditions.nonNull;
 import static com.badlogic.gdx.math.MathUtils.random;
 import static java.lang.Math.min;
 
-public class BubblesRisingPhase implements Phase {
+public class BubblesRisingPhase extends AbstractGamePhase {
 
     private GameData gameData;
     private float bubbleProbability;
     private float redProbability;
-    private int width;
-    private int height;
-    private BitmapFont font;
 
     public BubblesRisingPhase(Graphics graphics, GameData gameData, float bubbleProbability, float redProbability) {
-        this.width = graphics.getWidth();
-        this.height = graphics.getHeight();
-        this.gameData = gameData;
+        super(graphics);
+        this.gameData = nonNull(gameData);
         this.bubbleProbability = bubbleProbability;
         this.redProbability = redProbability;
-        this.font = new BitmapFont(Gdx.files.internal("fonts/arial-15.fnt"), false);
     }
 
     @Override
@@ -57,21 +51,6 @@ public class BubblesRisingPhase implements Phase {
 
         process(meshBatch, blueBubbles);
         process(meshBatch, redBubbles);
-
-        font.draw(spriteBatch, "" + blueBubbles.size() + " blueBubbles", 15, 15);
-        font.draw(spriteBatch, "" + redBubbles.size() + " redBubbles", 15, 30);
-    }
-
-    private void process(MeshBatch batch, ArrayList<Bubble> bubbles) {
-        for (int i = bubbles.size() - 1; i >= 0; i--) {
-            Bubble b = bubbles.get(i);
-            if (b.getY() > height) {
-                bubbles.remove(i).dispose();
-            } else {
-                b.update();
-                b.draw(batch);
-            }
-        }
     }
 
     private Bubble makeBlueBubble() {
@@ -100,6 +79,5 @@ public class BubblesRisingPhase implements Phase {
 
     @Override
     public void dispose() {
-        font.dispose();
     }
 }

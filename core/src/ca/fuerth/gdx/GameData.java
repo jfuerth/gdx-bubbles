@@ -12,6 +12,7 @@ public class GameData {
     private final ArrayList<Bubble> redBubbles = new ArrayList<Bubble>();
     private Bubble blueSumBubble;
     private Bubble redSumBubble;
+    private int score;
 
     public GameData(Graphics graphics) {
         Color emptyBubbleColor = new Color(0, 0, 0, 0);
@@ -39,5 +40,13 @@ public class GameData {
 
     public Bubble getRedSumBubble() {
         return redSumBubble;
+    }
+
+    public int getScore() {
+        return score;
+    }
+
+    public void setScore(int score) {
+        this.score = score;
     }
 }

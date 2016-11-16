@@ -10,17 +10,12 @@ import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Vector2;
 
-import java.util.ArrayList;
-
 import static com.badlogic.gdx.math.MathUtils.random;
 import static java.lang.Math.max;
 
-public class SumBubbleDifferencingPhase implements Phase {
+public class SumBubbleDifferencingPhase extends AbstractGamePhase {
 
     private final GameData gameData;
-
-    private int width;
-    private int height;
 
     private Vector2 redVelocity = new Vector2();
     private Vector2 blueVelocity = new Vector2();
@@ -28,17 +23,25 @@ public class SumBubbleDifferencingPhase implements Phase {
     private float convergenceSpeedLimit = 0f;
 
     public SumBubbleDifferencingPhase(Graphics graphics, GameData gameData) {
+        super(graphics);
         this.gameData = gameData;
-        this.width = graphics.getWidth();
-        this.height = graphics.getHeight();
     }
 
     @Override
     public boolean processInput(Input input) {
-        return (gameData.getRedSumBubble().getRadius() > 0f
-                && gameData.getBlueSumBubble().getRadius() > 0f)
-                || gameData.getRedBubbles().size() > 0
-                || gameData.getBlueBubbles().size() > 0;
+        boolean stillGoing = gameData.getRedSumBubble().getRadius() > 0f
+                && gameData.getBlueSumBubble().getRadius() > 0f;
+//                || gameData.getRedBubbles().size() > 0
+//                || gameData.getBlueBubbles().size() > 0;
+        if (!stillGoing) {
+            // add back negative loser area
+            if (gameData.getRedSumBubble().getRadius() > 0f) {
+                gameData.getRedSumBubble().growAreaBy(gameData.getBlueSumBubble());
+            } else {
+                gameData.getBlueSumBubble().growAreaBy(gameData.getRedSumBubble());
+            }
+        }
+        return stillGoing;
     }
 
     @Override
@@ -105,18 +108,6 @@ public class SumBubbleDifferencingPhase implements Phase {
 
     private void adjustVectorToward(Vector2 from, float toX, float toY, float maxLen) {
         from.sub(toX, toY).scl(-1f).clamp(0f, maxLen);
-    }
-
-    private void process(MeshBatch batch, ArrayList<Bubble> bubbles) {
-        for (int i = bubbles.size() - 1; i >= 0; i--) {
-            Bubble b = bubbles.get(i);
-            if (b.getY() > height || b.getY() < 0 || b.getX() < 0 || b.getX() > width) {
-                bubbles.remove(i).dispose();
-            } else {
-                b.update();
-                b.draw(batch);
-            }
-        }
     }
 
     @Override
