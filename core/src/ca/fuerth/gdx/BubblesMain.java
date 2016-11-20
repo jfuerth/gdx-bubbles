@@ -39,6 +39,7 @@ public class BubblesMain extends ApplicationAdapter {
         scorePosition = new Vector2(
                 Gdx.graphics.getWidth() - 50,
                 Gdx.graphics.getHeight() - font.getLineHeight());
+
         resetGame(ResetType.FULL_RESET);
     }
 

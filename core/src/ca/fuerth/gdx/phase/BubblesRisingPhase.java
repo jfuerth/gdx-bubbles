@@ -4,8 +4,10 @@ import ca.fuerth.gdx.GameData;
 import ca.fuerth.gdx.bubbles.Bubble;
 import ca.fuerth.gdx.mesh.MeshBatch;
 import ca.fuerth.gdx.motion.RisingBubbleMotion;
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Graphics;
 import com.badlogic.gdx.Input;
+import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 
@@ -17,6 +19,7 @@ import static java.lang.Math.min;
 
 public class BubblesRisingPhase extends AbstractGamePhase {
 
+    private final Sound sound;
     private GameData gameData;
     private float bubbleProbability;
     private float redProbability;
@@ -26,6 +29,7 @@ public class BubblesRisingPhase extends AbstractGamePhase {
         this.gameData = nonNull(gameData);
         this.bubbleProbability = bubbleProbability;
         this.redProbability = redProbability;
+        sound = Gdx.audio.newSound(Gdx.files.internal("sounds/popping_bubble.wav"));
     }
 
     @Override
@@ -62,7 +66,9 @@ public class BubblesRisingPhase extends AbstractGamePhase {
                 min(1f, blueness + desaturation),
                 0.8f);
         float radius = random(14) + 1f;
-        return new Bubble(new RisingBubbleMotion(radius), radius, random(width), 0f, color);
+        int x = random(width);
+        sound.play(0.2f, 0.5f + radius/15f, (x * 2f / width) - 1f);
+        return new Bubble(new RisingBubbleMotion(radius), radius, x, 0f, color);
     }
 
     private Bubble makeRedBubble() {
@@ -74,10 +80,13 @@ public class BubblesRisingPhase extends AbstractGamePhase {
                 desaturation,
                 0.8f);
         float radius = random(14) + 1f;
-        return new Bubble(new RisingBubbleMotion(radius), radius, random(width), 0f, color);
+        int x = random(width);
+        sound.play(0.2f, 0.5f + radius/15f, (x * 2f / width) - 1f);
+        return new Bubble(new RisingBubbleMotion(radius), radius, x, 0f, color);
     }
 
     @Override
     public void dispose() {
+        sound.dispose();
     }
 }

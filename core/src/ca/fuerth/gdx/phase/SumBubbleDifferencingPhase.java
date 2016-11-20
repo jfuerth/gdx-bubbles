@@ -4,8 +4,10 @@ import ca.fuerth.gdx.GameData;
 import ca.fuerth.gdx.bubbles.Bubble;
 import ca.fuerth.gdx.mesh.MeshBatch;
 import ca.fuerth.gdx.motion.ProjectileMotion;
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Graphics;
 import com.badlogic.gdx.Input;
+import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Vector2;
@@ -16,15 +18,18 @@ import static java.lang.Math.max;
 public class SumBubbleDifferencingPhase extends AbstractGamePhase {
 
     private final GameData gameData;
+    private final Sound sound;
 
     private Vector2 redVelocity = new Vector2();
     private Vector2 blueVelocity = new Vector2();
 
     private float convergenceSpeedLimit = 0f;
+    private float soundPitch = 2f;
 
     public SumBubbleDifferencingPhase(Graphics graphics, GameData gameData) {
         super(graphics);
         this.gameData = gameData;
+        sound = Gdx.audio.newSound(Gdx.files.internal("sounds/short_popping_bubble.wav"));
     }
 
     @Override
@@ -80,6 +85,9 @@ public class SumBubbleDifferencingPhase extends AbstractGamePhase {
             redSum.setRadius(redSum.getRadius() - overlap / 2f);
             blueSum.setRadius(blueSum.getRadius() - overlap / 2f);
 
+            sound.play(0.6f, soundPitch, 0f);
+            soundPitch = Math.max(0.5f, soundPitch - 0.01f);
+
             gameData.getRedBubbles().add(
                     new Bubble(
                             new ProjectileMotion(
@@ -112,6 +120,6 @@ public class SumBubbleDifferencingPhase extends AbstractGamePhase {
 
     @Override
     public void dispose() {
-
+        sound.dispose();
     }
 }
